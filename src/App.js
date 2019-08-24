@@ -1,26 +1,40 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { createBrowserHistory } from "history";
+import LoginForm from "./LoginForm";
+import { logout } from "./services/Authentication";
+import ProtectedRoute from "./utils/ProtectedRoute";
 
-function App() {
+function App(props) {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router history={createBrowserHistory}>
+      <Switch>
+        <ProtectedRoute
+          exact
+          path="/"
+          component={() => (
+            <div>
+              Hello Dashboard
+              <button
+                onClick={() => {
+                  logout();
+                }}
+              >
+                Logout
+              </button>
+            </div>
+          )}
+        />
+        <Route path="/login" component={() => <LoginForm type="login" />} />
+        <Route
+          path="/register"
+          component={() => <LoginForm type="register" />}
+        />
+      </Switch>
+    </Router>
   );
 }
+
+App.propTypes = {};
 
 export default App;
