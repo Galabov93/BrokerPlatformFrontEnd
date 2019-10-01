@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Formik } from "formik";
 import { withRouter, Link } from "react-router-dom";
 import * as Yup from "yup";
-import { login, register } from "../services/Authentication/index";
+import { login, register } from "../../services/Authentication/index";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -24,20 +24,11 @@ const LoginSchema = Yup.object().shape({
 });
 
 const useStyles = makeStyles(theme => ({
-  "@global": {
-    body: {
-      backgroundColor: theme.palette.common.white
-    }
-  },
   paper: {
-    marginTop: theme.spacing(8),
     display: "flex",
     flexDirection: "column",
-    alignItems: "center"
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main
+    alignItems: "center",
+    marginTop: theme.spacing(10)
   },
   form: {
     width: "100%", // Fix IE 11 issue.
@@ -184,14 +175,11 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
+      <Link color="inherit" href="">
+        Real estate platform
       </Link>{" "}
       {new Date().getFullYear()}
-      {". Built with "}
-      <Link color="inherit" href="https://material-ui.com/">
-        Material-UI.
-      </Link>
+      {". Built with Love"}
     </Typography>
   );
 }

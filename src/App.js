@@ -1,35 +1,19 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { createBrowserHistory } from "history";
-import LoginForm from "./LoginForm";
-import { logout } from "./services/Authentication";
-import ProtectedRoute from "./utils/ProtectedRoute";
+import LoginForm from "./components/LoginForm";
+import UserRoutes from "./routes/UserRoutes";
 
-function App(props) {
+function App() {
   return (
     <Router history={createBrowserHistory}>
       <Switch>
-        <ProtectedRoute
-          exact
-          path="/"
-          component={() => (
-            <div>
-              Hello Dashboard
-              <button
-                onClick={() => {
-                  logout();
-                }}
-              >
-                Logout
-              </button>
-            </div>
-          )}
-        />
         <Route path="/login" component={() => <LoginForm type="login" />} />
         <Route
           path="/register"
           component={() => <LoginForm type="register" />}
         />
+        <UserRoutes />
       </Switch>
     </Router>
   );
