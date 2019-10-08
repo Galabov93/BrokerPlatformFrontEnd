@@ -7,6 +7,9 @@ import { ThemeProvider } from "@material-ui/styles";
 import { CssBaseline } from "@material-ui/core";
 import { Provider } from "react-redux";
 import { createStore } from "redux";
+import blue from "@material-ui/core/colors/blue";
+import green from "@material-ui/core/colors/green";
+import orange from "@material-ui/core/colors/orange";
 
 function rootReducer(state = { value: 0 }, action) {
   switch (action.type) {
@@ -18,11 +21,20 @@ function rootReducer(state = { value: 0 }, action) {
       return state;
   }
 }
-const theme = createMuiTheme({});
 const store = createStore(
   rootReducer,
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
+
+const theme = createMuiTheme({
+  palette: {
+    primary: blue,
+    secondary: green
+  },
+  fontColor: {
+    importantText: orange[500]
+  }
+});
 
 ReactDOM.render(
   <Provider store={store}>

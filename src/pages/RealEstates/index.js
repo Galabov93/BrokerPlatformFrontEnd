@@ -195,7 +195,7 @@ function RealEstates(props) {
               <Paper className={classes.realEstateListItem}>
                 <aside>
                   <img src={"https://via.placeholder.com/350"} alt="" />
-                  <Link className="" to="property-page"></Link>
+                  <Link to={`property-page/${property.id}`}></Link>
                 </aside>
                 <main>
                   <div className={"priceContainer"}>
