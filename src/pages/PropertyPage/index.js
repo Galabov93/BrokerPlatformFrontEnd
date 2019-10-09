@@ -34,9 +34,12 @@ const useStyles = makeStyles(theme => ({
   },
   carousel: {
     position: "relative",
+    "& .carousel__image--success": {
+      objectFit: "cover"
+    },
     "& .carousel__dot-group": {
       position: "absolute",
-      bottom: theme.spacing(3),
+      bottom: theme.spacing(2),
       width: "100%",
       display: "flex",
       justifyContent: "center",
@@ -52,7 +55,7 @@ const useStyles = makeStyles(theme => ({
         transition: "background-color 300ms ease-in"
       },
       "& .carousel__dot--selected": {
-        backgroundColor: "black"
+        backgroundColor: "red"
       }
     }
   },
@@ -132,6 +135,9 @@ const useStyles = makeStyles(theme => ({
   featuresContainer: {
     marginTop: theme.spacing(2)
   },
+  description: {
+    padding: theme.spacing(1)
+  },
   featuresList: {
     "& li": {
       padding: theme.spacing(1) / 2
@@ -157,7 +163,7 @@ function PropertyPage() {
   }, []);
 
   const images = [
-    "https://via.placeholder.com/150",
+    "https://broker-platfrom-storage-bucket.s3.eu-central-1.amazonaws.com/2c156621419843728/bigPhotos/2c156621419843728_GB",
     "https://via.placeholder.com/250",
     "https://via.placeholder.com/350",
     "https://via.placeholder.com/450",
@@ -218,7 +224,7 @@ function PropertyPage() {
             <CarouselProvider
               className={classes.carousel}
               naturalSlideWidth={100}
-              naturalSlideHeight={125}
+              naturalSlideHeight={100}
               totalSlides={10}
               onMouseEnter={() => setCarouselArrowsShowing(true)}
               onMouseLeave={() => setCarouselArrowsShowing(false)}
@@ -229,7 +235,10 @@ function PropertyPage() {
                     <Image
                       src={`${image}`}
                       hasMasterSpinner="true"
-                      onClick={() => setLightboxOpen(true)}
+                      onClick={() => {
+                        setPhotoIndex(index);
+                        setLightboxOpen(true);
+                      }}
                     />
                   </Slide>
                 ))}
@@ -308,7 +317,7 @@ function PropertyPage() {
                 boldText={realEstatesData.real_estates_tec}
               />
             </Paper>
-            <Hidden mdDown>
+            <Hidden smDown>
               <Paper className={classes.featuresContainer}>
                 <HeadingText text={"Особености:"} />
 
@@ -327,7 +336,7 @@ function PropertyPage() {
             <Paper>
               <HeadingText text={"Допълнителна информация"} />
 
-              <Typography>
+              <Typography className={classes.description}>
                 {realEstatesData.real_estates_description}
               </Typography>
             </Paper>
