@@ -38,7 +38,10 @@ const testData = {
 
 const useStyles = makeStyles(theme => ({
   container: {
-    marginTop: theme.spacing(4)
+    marginTop: theme.spacing(4),
+    "& a": {
+      textDecoration: "none"
+    }
   },
   rightIcon: {
     marginLeft: theme.spacing(1)
@@ -194,7 +197,12 @@ function RealEstates(props) {
             <Grid key={`property-${index}`} item xs={12} sm={10} md={8}>
               <Paper className={classes.realEstateListItem}>
                 <aside>
-                  <img src={"https://via.placeholder.com/350"} alt="" />
+                  <img
+                    src={
+                      "https://broker-platfrom-storage-bucket.s3.eu-central-1.amazonaws.com/2c156621419843728/bigPhotos/2c156621419843728_GB"
+                    }
+                    alt=""
+                  />
                   <Link to={`property-page/${property.id}`}></Link>
                 </aside>
                 <main>
