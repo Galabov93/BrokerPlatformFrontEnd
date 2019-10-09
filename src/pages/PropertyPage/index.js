@@ -3,17 +3,6 @@ import { withRouter } from "react-router-dom";
 import axios from "../../config/API";
 import { makeStyles } from "@material-ui/styles";
 import {
-  CarouselProvider,
-  Slider,
-  Slide,
-  ButtonBack,
-  ButtonNext,
-  Image,
-  Dot,
-  DotGroup
-} from "pure-react-carousel";
-import "pure-react-carousel/dist/react-carousel.es.css";
-import {
   Container,
   Typography,
   Paper,
@@ -21,66 +10,14 @@ import {
   Hidden,
   Link
 } from "@material-ui/core";
-import NavigateNext from "@material-ui/icons/NavigateNext";
-import NavigateBefore from "@material-ui/icons/NavigateBefore";
-import clsx from "clsx";
-import Lightbox from "react-image-lightbox";
 import "react-image-lightbox/style.css";
-import { useWidth } from "../../utils/CustomHooks";
+import Carousel from "../../components/Carousel";
 
 const useStyles = makeStyles(theme => ({
   componentContainer: {
     marginTop: theme.spacing(3)
   },
-  carousel: {
-    position: "relative",
-    "& .carousel__image--success": {
-      objectFit: "cover"
-    },
-    "& .carousel__dot-group": {
-      position: "absolute",
-      bottom: theme.spacing(2),
-      width: "100%",
-      display: "flex",
-      justifyContent: "center",
-      flexWrap: "wrap",
-      "& button": {
-        border: "none",
-        color: "white",
-        borderRadius: 100,
-        backgroundColor: "white",
-        padding: theme.spacing(1),
-        marginTop: theme.spacing(1),
-        marginRight: theme.spacing(1),
-        transition: "background-color 300ms ease-in"
-      },
-      "& .carousel__dot--selected": {
-        backgroundColor: "red"
-      }
-    }
-  },
-  arrow: {
-    [theme.breakpoints.down("sm")]: {
-      display: "none"
-    },
-    position: "absolute",
-    top: "calc(50% - 35px)",
-    border: "none",
-    background: "none",
-    outline: 0,
-    width: 80,
-    height: 80,
-    "& svg": {
-      width: "100%",
-      height: "100%"
-    }
-  },
-  arrowBack: {
-    left: 30
-  },
-  arrowNext: {
-    right: 30
-  },
+
   heading: {
     padding: theme.spacing(1)
   },
@@ -148,11 +85,7 @@ const useStyles = makeStyles(theme => ({
 function PropertyPage() {
   const classes = useStyles();
 
-  const width = useWidth();
   const [realEstatesData, setRealEstatesData] = useState(null);
-  const [areCarouselArrowsShowing, setCarouselArrowsShowing] = useState(false);
-  const [isLightboxOpen, setLightboxOpen] = useState(false);
-  const [photoIndex, setPhotoIndex] = useState(0);
 
   useEffect(() => {
     async function fetchData() {
@@ -200,65 +133,8 @@ function PropertyPage() {
             </Grid>
           </Hidden>
 
-          {isLightboxOpen && ["md", "lg", "xl"].includes(width) && (
-            <>
-              <Lightbox
-                mainSrc={images[photoIndex]}
-                nextSrc={images[(photoIndex + 1) % images.length]}
-                prevSrc={
-                  images[(photoIndex + images.length - 1) % images.length]
-                }
-                onCloseRequest={() => setLightboxOpen(false)}
-                onMovePrevRequest={() =>
-                  setPhotoIndex(
-                    (photoIndex + images.length - 1) % images.length
-                  )
-                }
-                onMoveNextRequest={() =>
-                  setPhotoIndex((photoIndex + 1) % images.length)
-                }
-              />
-            </>
-          )}
           <Grid item xs={12} md={6}>
-            <CarouselProvider
-              className={classes.carousel}
-              naturalSlideWidth={100}
-              naturalSlideHeight={100}
-              totalSlides={10}
-              onMouseEnter={() => setCarouselArrowsShowing(true)}
-              onMouseLeave={() => setCarouselArrowsShowing(false)}
-            >
-              <Slider>
-                {images.map((image, index) => (
-                  <Slide key={`carousel-image-${index}`} index={index}>
-                    <Image
-                      src={`${image}`}
-                      hasMasterSpinner="true"
-                      onClick={() => {
-                        setPhotoIndex(index);
-                        setLightboxOpen(true);
-                      }}
-                    />
-                  </Slide>
-                ))}
-              </Slider>
-              <DotGroup></DotGroup>
-              {areCarouselArrowsShowing && (
-                <>
-                  <ButtonBack
-                    className={clsx(classes.arrow, classes.arrowBack)}
-                  >
-                    <NavigateBefore fontSize="large" />
-                  </ButtonBack>
-                  <ButtonNext
-                    className={clsx(classes.arrow, classes.arrowNext)}
-                  >
-                    <NavigateNext fontSize="large" />
-                  </ButtonNext>
-                </>
-              )}
-            </CarouselProvider>
+            <Carousel images={images} />
           </Grid>
 
           <Hidden mdUp>
