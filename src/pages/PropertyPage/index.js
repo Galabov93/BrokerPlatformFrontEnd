@@ -12,12 +12,15 @@ import {
 } from "@material-ui/core";
 import "react-image-lightbox/style.css";
 import Carousel from "../../components/Carousel";
+import clsx from "clsx";
 
 const useStyles = makeStyles(theme => ({
   componentContainer: {
     marginTop: theme.spacing(3)
   },
-
+  paperContainer: {
+    padding: theme.spacing(1)
+  },
   heading: {
     padding: theme.spacing(1)
   },
@@ -73,7 +76,9 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(2)
   },
   description: {
-    padding: theme.spacing(1)
+    padding: theme.spacing(1),
+    maxWidth: "95%",
+    textAlign: "justify"
   },
   featuresList: {
     "& li": {
@@ -81,6 +86,52 @@ const useStyles = makeStyles(theme => ({
     }
   }
 }));
+
+// Title and Price information
+function DesktopTitleBar({ realEstatesData, className }) {
+  return (
+    <Hidden smDown>
+      <Grid item xs={12} md={10} className={className}>
+        <Typography variant="h6">
+          {realEstatesData.real_estates_title.split(",")[0]},
+          {realEstatesData.real_estates_city},{" "}
+          {realEstatesData.real_estates_address}
+        </Typography>
+
+        <div className="priceParagraph">
+          <Typography>
+            {realEstatesData.real_estates_original_price}{" "}
+            {realEstatesData.real_estates_currency}
+            <br />
+          </Typography>
+          <Typography>
+            {realEstatesData.real_estates_price_per_square}
+          </Typography>
+        </div>
+      </Grid>
+    </Hidden>
+  );
+}
+
+// Title and Price information
+function MobileTitleBar({ realEstatesData, className }) {
+  console.log("TCL: MobileTitleBar -> realEstatesData", realEstatesData);
+  return (
+    <Hidden mdUp>
+      <Grid item xs={12} className={className}>
+        <Typography variant="h6">
+          {realEstatesData.real_estates_title}
+        </Typography>
+
+        <Typography className="priceParagraph">
+          {realEstatesData.real_estates_original_price}{" "}
+          {realEstatesData.real_estates_currency} <br />
+          <span>{realEstatesData.real_estates_price_per_square}</span>
+        </Typography>
+      </Grid>
+    </Hidden>
+  );
+}
 
 function PropertyPage() {
   const classes = useStyles();
@@ -112,47 +163,22 @@ function PropertyPage() {
     realEstatesData !== null && (
       <Container className={classes.componentContainer} maxWidth="lg">
         <Grid container justify="center" spacing={4}>
-          <Hidden smDown>
-            <Grid item xs={12} md={10} className={classes.titleAndPrice}>
-              <Typography variant="h6">
-                {realEstatesData.real_estates_title.split(",")[0]},
-                {realEstatesData.real_estates_city},{" "}
-                {realEstatesData.real_estates_address}
-              </Typography>
-
-              <div className="priceParagraph">
-                <Typography>
-                  {realEstatesData.real_estates_original_price}{" "}
-                  {realEstatesData.real_estates_currency}
-                  <br />
-                </Typography>
-                <Typography>
-                  {realEstatesData.real_estates_price_per_square}
-                </Typography>
-              </div>
-            </Grid>
-          </Hidden>
+          <DesktopTitleBar
+            realEstatesData={realEstatesData}
+            className={classes.titleAndPrice}
+          />
 
           <Grid item xs={12} md={6}>
             <Carousel images={images} />
           </Grid>
 
-          <Hidden mdUp>
-            <Grid item xs={12} className={classes.titleAndPrice}>
-              <Typography variant="h6">
-                {realEstatesData.real_estates_title}
-              </Typography>
-
-              <Typography className="priceParagraph">
-                {realEstatesData.real_estates_original_price}{" "}
-                {realEstatesData.real_estates_currency} <br />
-                <span>{realEstatesData.real_estates_price_per_square}</span>
-              </Typography>
-            </Grid>
-          </Hidden>
+          <MobileTitleBar
+            realEstatesData={realEstatesData}
+            className={classes.titleAndPrice}
+          />
 
           <Grid item xs={12} md={4}>
-            <Paper>
+            <Paper className={classes.paperContainer}>
               <HeadingText text={"Основна информация"} />
 
               <Hidden mdUp>
@@ -194,7 +220,12 @@ function PropertyPage() {
               />
             </Paper>
             <Hidden smDown>
-              <Paper className={classes.featuresContainer}>
+              <Paper
+                className={clsx(
+                  classes.featuresContainer,
+                  classes.paperContainer
+                )}
+              >
                 <HeadingText text={"Особености:"} />
 
                 <ul className={classes.featuresList}>
@@ -209,7 +240,7 @@ function PropertyPage() {
           </Grid>
 
           <Grid item xs={12} md={10} lg={10}>
-            <Paper>
+            <Paper className={classes.paperContainer}>
               <HeadingText text={"Допълнителна информация"} />
 
               <Typography className={classes.description}>
@@ -220,7 +251,7 @@ function PropertyPage() {
 
           <Hidden mdUp>
             <Grid item xs={12} md={6} lg={5}>
-              <Paper>
+              <Paper className={classes.paperContainer}>
                 <HeadingText text={"Особености:"} />
 
                 <ul className={classes.featuresList}>

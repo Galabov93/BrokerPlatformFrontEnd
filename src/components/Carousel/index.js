@@ -81,7 +81,7 @@ function Carousel({ images }) {
       <CarouselProvider
         className={classes.carousel}
         naturalSlideWidth={100}
-        naturalSlideHeight={100}
+        naturalSlideHeight={getNaturalHeight(width)}
         totalSlides={10}
         onMouseEnter={() => setCarouselArrowsShowing(true)}
         onMouseLeave={() => setCarouselArrowsShowing(false)}
@@ -138,3 +138,13 @@ Carousel.propTypes = {
 };
 
 export default Carousel;
+
+function getNaturalHeight(screenWidth) {
+  if (screenWidth === "xs") {
+    return 100;
+  } else if (screenWidth === "sm") {
+    return 70;
+  } else {
+    return 90;
+  }
+}
