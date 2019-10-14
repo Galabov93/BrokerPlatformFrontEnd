@@ -116,9 +116,7 @@ function RealEstates(props) {
   const dispatch = useDispatch();
 
   const [realEstatesData, setRealEstatesData] = useState(null);
-  console.log("TCL: RealEstates -> realEstatesData", realEstatesData);
   const [uid, setUid] = useState(null);
-  console.log("TCL: RealEstates -> uid", uid);
 
   useEffect(() => {
     async function fetchData() {
