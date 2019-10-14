@@ -1,40 +1,21 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import axios from "../../config/API";
-import { Container, Button, Grid, Typography, Paper } from "@material-ui/core";
+import {
+  Container,
+  Button,
+  Grid,
+  Typography,
+  Paper,
+  Hidden
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import PlusIcon from "@material-ui/icons/Add";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-
-const testData = {
-  id: 1,
-  real_estates_address: "град София, Докторски паметник, бул. Янко Сакъзов",
-  real_estates_city: " град София", //
-  real_estates_construction_type: "2-СТАЕН",
-  real_estates_created_by: "Manata",
-  real_estates_currency: "EUR",
-  real_estates_description:
-    "Уютен апартамент до парк Заимов, с невероятна гледка към Витоша. На 10 мин. пешеходно разстояние от паметника Левски, Храм-паметник Александър Невски, Докторската градина, Софийски университет и метростанция.   Напълно обзаведен с много грижа и внимание к",
-  real_estates_floor: "6-ти от 6",
-  real_estates_id: "2c156544901411455",
-  real_estates_imageNames: "/150,/150,/150",
-  real_estates_neighborhood: "Докторски паметник",
-  real_estates_original_price: 480,
-  real_estates_phone: 0,
-  real_estates_price_in_euro: 480,
-  real_estates_price_per_square: "(9.6 EUR/кв.м)",
-  real_estates_price_per_square_in_euro: 9.6,
-  real_estates_sell_type: "rent",
-  real_estates_seller_features: " Обзаведен, Лукс, Климатик, Интернет връзка",
-  real_estates_seller_phone_number: "0894377586",
-  real_estates_size: 50,
-  real_estates_tec: 0,
-  real_estates_title: "Дава под Наем 2-СТАЕН, град София, Докторски паметник",
-  real_estates_website_source: "imot.bg"
-};
+import uuid from "uuid";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -55,7 +36,7 @@ const useStyles = makeStyles(theme => ({
   },
   realEstateListItem: {
     display: "flex",
-    height: 170,
+    height: 190,
     [theme.breakpoints.up("lg")]: {
       height: 240
     },
@@ -94,10 +75,10 @@ const useStyles = makeStyles(theme => ({
       },
       "& .priceContainer": {
         marginRight: theme.spacing(2),
-        [theme.breakpoints.down("lg")]: {
-          display: "flex",
-          justifyContent: "space-between"
-        },
+        // [theme.breakpoints.down("lg")]: {
+        display: "flex",
+        justifyContent: "space-between",
+        // },,
         "& .price": {
           fontSize: 18,
           fontWeight: 700,
@@ -136,6 +117,8 @@ function RealEstates(props) {
 
   const [realEstatesData, setRealEstatesData] = useState(null);
   console.log("TCL: RealEstates -> realEstatesData", realEstatesData);
+  const [uid, setUid] = useState(null);
+  console.log("TCL: RealEstates -> uid", uid);
 
   useEffect(() => {
     async function fetchData() {
@@ -143,6 +126,7 @@ function RealEstates(props) {
       setRealEstatesData(response.data.data);
     }
     fetchData();
+    setUid(uuid());
   }, []);
 
   // function handleClick(event) {
@@ -160,7 +144,7 @@ function RealEstates(props) {
       <Container maxWidth="lg" className={classes.container}>
         <Grid container spacing={3} justify="space-around">
           <Grid item>
-            <Link to="add-new-real-estate">
+            <Link to={`property/add/${uid}`}>
               <Button
                 name="newRealEstate"
                 variant="contained"
@@ -223,9 +207,11 @@ function RealEstates(props) {
                     {property.real_estates_city},{" "}
                     {property.real_estates_neighborhood}
                   </Typography>
-                  <Typography className="city_neighborhood">
-                    {property.real_estates_description}
-                  </Typography>
+                  <Hidden mdDown>
+                    <Typography className="city_neighborhood">
+                      {property.real_estates_description}
+                    </Typography>
+                  </Hidden>
                   <Link className="editButton" to="/edit/id">
                     <Button variant="contained" color="primary">
                       Редактирай
