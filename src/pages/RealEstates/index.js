@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import axios from "../../config/API";
 import {
   Container,
@@ -7,15 +6,21 @@ import {
   Grid,
   Typography,
   Paper,
-  Hidden
+  Hidden,
+  MenuItem
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import SearchIcon from "@material-ui/icons/Search";
-import PlusIcon from "@material-ui/icons/Add";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import uuid from "uuid";
+import { withFormik } from "formik";
+import { FormSelectMenu } from "../../components/FormComponents/FormSelectMenu";
+import {
+  realEstateTypes,
+  neighborhoods
+} from "../../utils/FormHelpers/form-data";
+import FormMultipleSelect from "../../components/FormComponents/FormMultipleSelect";
+import { FormTextField } from "../../components/FormComponents/FormTextField";
+import API from "../../config/API";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -99,24 +104,163 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-// dispatch an action
+const filterStyles = makeStyles(theme => ({
+  formContainer: {
+    width: "100%",
+    "& .select-container": {
+      flex: 1
+    }
+  },
+  selectContainer: {},
+  rangesContainer: {
+    display: "flex"
+  }
+}));
 
-// const ADD_NEW_REAL_ESTATE_BUTTON_CLICKED = {
-//   type: "ADD_NEW_REAL_ESTATE"
-// };
+const MyForm = props => {
+  const {
+    values,
+    errors,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    setFieldValue,
+    setFieldTouched,
+  } = props;
+  const classes = filterStyles();
 
-// const SEARCH_REAL_ESTATE_BUTTON_CLICKED = {
-//   type: "SEARCH_REAL_ESTATE_BUTTON_CLICKED"
-// };
+  function formatCollectionForReactSelect(array) {
+    return array.map(element => ({
+      label: element,
+      value: element
+    }));
+  }
 
-const LOAD_REAL_ESTATE_DATA = page => ({ page, type: "LOAD_REAL_ESTATE_DATA" });
+  const offerTypes = [
+    { label: "За Наем", value: "rent" },
+    { label: "За Продаване", value: "sell" }
+  ];
+
+  return (
+    <form onSubmit={handleSubmit} className={classes.formContainer}>
+      <div style={{ width: "100%", display: "flex" }}>
+        <FormMultipleSelect
+          className="select-container"
+          name="propertySellType"
+          placeholder="Тип оферта"
+          values={offerTypes.find(
+            element => element.value === values.propertySellType
+          )}
+          options={offerTypes}
+          onChange={element => setFieldValue("propertySellType", element.value)}
+        />
+
+        <FormMultipleSelect
+          isMulti
+          className="select-container"
+          name="constructionType"
+          placeholder="Вид на имота"
+          values={values.constructionType}
+          options={formatCollectionForReactSelect(realEstateTypes)}
+          onChange={element => setFieldValue("constructionType", element)}
+        />
+
+        <FormMultipleSelect
+          isMulti
+          className="select-container"
+          name="neighbourhoods"
+          placeholder="Квартали"
+          values={values.neighbourhoods}
+          options={formatCollectionForReactSelect(neighborhoods)}
+          onChange={element => setFieldValue("neighbourhoods", element)}
+        />
+      </div>
+      <div>
+        <div className={classes.rangesContainer}>
+          <FormTextField
+            className={classes.textField}
+            variant="filled"
+            label="Цена от"
+            name="priceFrom"
+            values={values}
+            handleChange={handleChange}
+            handleBlur={handleBlur}
+            errors={errors}
+          />
+          <FormTextField
+            className={classes.textField}
+            variant="filled"
+            label="Цена от"
+            name="priceTo"
+            values={values}
+            handleChange={handleChange}
+            handleBlur={handleBlur}
+            errors={errors}
+          />
+        </div>
+
+        <div className={classes.rangesContainer}>
+          <FormTextField
+            className={classes.textField}
+            variant="filled"
+            label="Квадратура от"
+            name="sizeFrom"
+            values={values}
+            handleChange={handleChange}
+            handleBlur={handleBlur}
+            errors={errors}
+          />
+          <FormTextField
+            className={classes.textField}
+            variant="filled"
+            label="Квадратура от"
+            name="sizeTo"
+            values={values}
+            handleChange={handleChange}
+            handleBlur={handleBlur}
+            errors={errors}
+          />
+        </div>
+      </div>
+      <Button
+        name="search"
+        variant="contained"
+        color="primary"
+        className={classes.button}
+        type="submit"
+      >
+        Търсене
+        <SearchIcon className={classes.rightIcon} />
+      </Button>
+    </form>
+  );
+};
+
+const MyEnhancedForm = withFormik({
+  mapPropsToValues: () => ({
+    propertySellType: "",
+    constructionType: [],
+    neighbourhoods: [],
+    priceFrom: "",
+    priceTo: "",
+    sizeFrom: "",
+    sizeTo: ""
+  }),
+
+  handleSubmit: async (values, { setSubmitting }) => {
+    const response = await API.get("query-real-estates/");
+    console.log("TCL: response", response);
+    setCurrentFilters()
+  },
+
+  displayName: "BasicForm"
+})(MyForm);
 
 function RealEstates(props) {
   const classes = useStyles();
-  const dispatch = useDispatch();
 
   const [realEstatesData, setRealEstatesData] = useState(null);
-  const [uid, setUid] = useState(null);
+  const [currentFilters, setCurrentFilters] = useState(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -124,50 +268,14 @@ function RealEstates(props) {
       setRealEstatesData(response.data.data);
     }
     fetchData();
-    setUid(uuid());
-  }, []);
-
-  // function handleClick(event) {
-  //   const name = event.target.name;
-  //   if (name === "search") {
-  //     // dispatch
-  //     dispatch(SEARCH_REAL_ESTATE_BUTTON_CLICKED);
-  //   } else if (name === "newRealEstate") {
-  //     dispatch(ADD_NEW_REAL_ESTATE_BUTTON_CLICKED);
-  //   }
-  // }
+  }, [currentFilters]);
 
   return (
     realEstatesData !== null && (
       <Container maxWidth="lg" className={classes.container}>
         <Grid container spacing={3} justify="space-around">
-          <Grid item>
-            <Link to={`property/add/${uid}`}>
-              <Button
-                name="newRealEstate"
-                variant="contained"
-                color="primary"
-                className={classes.button}
-              >
-                Нов имот
-                <PlusIcon className={classes.rightIcon} />
-              </Button>
-            </Link>
-          </Grid>
-
-          <Grid item>
-            <Link to="search-new-real-estate">
-              <Button
-                name="search"
-                variant="contained"
-                color="primary"
-                className={classes.button}
-              >
-                Търсене
-                <SearchIcon className={classes.rightIcon} />
-              </Button>
-            </Link>
-          </Grid>
+          {/* Filters component */}
+          <MyEnhancedForm setCurrentFilters={setCurrentFilters} />
         </Grid>
 
         <Grid

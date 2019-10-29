@@ -1,17 +1,13 @@
-import React, { Fragment, useRef } from "react";
+import React, { useRef } from "react";
 import { withFormik } from "formik";
 import * as Yup from "yup";
 import {
   FormControl,
-  Select,
-  InputLabel,
   MenuItem,
   Container,
   Button,
-  FormHelperText,
   Typography,
   Box,
-  TextField,
   InputAdornment,
   Checkbox,
   FormControlLabel,
@@ -26,8 +22,10 @@ import {
   realEstateTypes,
   cities,
   features
-} from "./form-helpers";
+} from "../../utils/FormHelpers/form-data";
 import AddIcon from "@material-ui/icons/Add";
+import { FormSelectMenu } from "../../components/FormComponents/FormSelectMenu";
+import { FormTextField } from "../../components/FormComponents/FormTextField";
 
 const PropertyFormSchema = Yup.object().shape({
   //   propertySellType: Yup.string().required("Required"),
@@ -89,57 +87,6 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(4)
   }
 }));
-
-const FormSelectMenu = ({
-  className,
-  name,
-  label,
-  values,
-  errors,
-  setFieldValue,
-  setFieldTouched,
-  children
-}) => (
-  <FormControl className={className}>
-    <InputLabel htmlFor={name}>{label}</InputLabel>
-    <Select
-      name={name}
-      value={values[name]}
-      onChange={value => setFieldValue(name, value.target.value)}
-      onBlur={() => setFieldTouched(name, true)}
-      error={errors[name] ? true : false}
-    >
-      {children}
-    </Select>
-    <FormHelperText>{errors[name]}</FormHelperText>
-  </FormControl>
-);
-
-const FormTextField = ({
-  containerClass,
-  textFieldClass,
-  name,
-  label,
-  values,
-  errors,
-  handleChange,
-  handleBlur,
-  ...rest
-}) => (
-  <div className={containerClass}>
-    <TextField
-      className={textFieldClass}
-      label={label}
-      name={name}
-      value={values[name]}
-      onChange={handleChange}
-      onBlur={handleBlur}
-      error={errors[name] ? true : false}
-      {...rest}
-    />
-    <TextFieldErrorMessage errors={errors} name={name} />
-  </div>
-);
 
 function AddImageComponent({ values, index, classes, onDrop }) {
   const inputRef = useRef(null);
@@ -521,14 +468,6 @@ const Form = ({
     </Container>
   );
 };
-
-function TextFieldErrorMessage({ name, errors }) {
-  return errors[name] ? (
-    <Typography color="error">{errors[name]}</Typography>
-  ) : (
-    <Fragment />
-  );
-}
 
 const MyEnhancedForm = withFormik({
   mapPropsToValues: () => ({
