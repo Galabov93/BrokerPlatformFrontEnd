@@ -10,14 +10,64 @@ import {
   Hidden
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
-import SearchIcon from "@material-ui/icons/Search";
-import PlusIcon from "@material-ui/icons/Add";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import uuid from "uuid";
+import ReactPaginate from "react-paginate";
+import { animateScroll as scroll } from "react-scroll";
+import { CircularProgress } from "@material-ui/core";
+import { classes } from "istanbul-lib-coverage";
+
+const useSpinnerStyles = makeStyles(theme => ({
+  fullScreenSpinner: {
+    marginTop: theme.spacing(4),
+    width: "100%",
+    display: "flex",
+    justifyContent: "center"
+  }
+}));
+
+const FullScreenLoader = () => {
+  const classes = useSpinnerStyles();
+  return (
+    <div className={classes.fullScreenSpinner}>
+      <CircularProgress />
+    </div>
+  );
+};
 
 const useStyles = makeStyles(theme => ({
+  paginationContainer: {
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(4),
+    "& .pagination": {
+      display: "flex",
+      justifyContent: "center",
+      width: "100%",
+      "& li": {
+        listStyleType: "none",
+        margin: theme.spacing(1) / 2,
+        color: "#2196f3",
+        backgroundColor: "#fff",
+        border: "none",
+        borderRadius: 45,
+        boxShadow: "0px 8px 15px rgba(0, 0, 0, 0.1)",
+        transition: "all 0.3s ease 0s",
+        cursor: "pointer",
+        outline: "none",
+        "& a": {
+          padding: theme.spacing(1) + 4,
+          outline: "none",
+          width: "100%",
+          height: "100%"
+        }
+      },
+      "& .active": {
+        color: "#0d47a1",
+        boxShadow: "0px 4px 23px rgba(0, 0, 0, 0.3)",
+        fontWeight: "bolder"
+      }
+    }
+  },
   container: {
     marginTop: theme.spacing(4),
     "& a": {
@@ -99,129 +149,101 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-// dispatch an action
-
-// const ADD_NEW_REAL_ESTATE_BUTTON_CLICKED = {
-//   type: "ADD_NEW_REAL_ESTATE"
-// };
-
-// const SEARCH_REAL_ESTATE_BUTTON_CLICKED = {
-//   type: "SEARCH_REAL_ESTATE_BUTTON_CLICKED"
-// };
-
-const LOAD_REAL_ESTATE_DATA = page => ({ page, type: "LOAD_REAL_ESTATE_DATA" });
-
 function RealEstates(props) {
-  const classes = useStyles();
-  const dispatch = useDispatch();
+  const LIMIT = 10;
 
+  const classes = useStyles();
   const [realEstatesData, setRealEstatesData] = useState(null);
   const [uid, setUid] = useState(null);
+  const [total, setTotal] = useState(null);
+  const [page, setPage] = useState(0);
+  console.log("TCL: RealEstates -> page", page);
+
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
-      const response = await axios.get("/real-estates");
+      scroll.scrollToTop();
+      const response = await axios.get(
+        `/real-estates/?$limit=${LIMIT}&$skip=${page * LIMIT}`
+      );
       setRealEstatesData(response.data.data);
+      setTotal(response.data.total);
     }
-    fetchData();
     setUid(uuid());
-  }, []);
+    fetchData().then(() => setLoading(false));
+  }, [page]);
 
-  // function handleClick(event) {
-  //   const name = event.target.name;
-  //   if (name === "search") {
-  //     // dispatch
-  //     dispatch(SEARCH_REAL_ESTATE_BUTTON_CLICKED);
-  //   } else if (name === "newRealEstate") {
-  //     dispatch(ADD_NEW_REAL_ESTATE_BUTTON_CLICKED);
-  //   }
-  // }
-
-  return (
-    realEstatesData !== null && (
-      <Container maxWidth="lg" className={classes.container}>
-        <Grid container spacing={3} justify="space-around">
-          <Grid item>
-            <Link to={`property/add/${uid}`}>
-              <Button
-                name="newRealEstate"
-                variant="contained"
-                color="primary"
-                className={classes.button}
-              >
-                Нов имот
-                <PlusIcon className={classes.rightIcon} />
-              </Button>
-            </Link>
-          </Grid>
-
-          <Grid item>
-            <Link to="search-new-real-estate">
-              <Button
-                name="search"
-                variant="contained"
-                color="primary"
-                className={classes.button}
-              >
-                Търсене
-                <SearchIcon className={classes.rightIcon} />
-              </Button>
-            </Link>
-          </Grid>
-        </Grid>
-
-        <Grid
-          container
-          justify="center"
-          className={classes.realEstatesContainer}
-        >
-          {realEstatesData.map((property, index) => (
-            <Grid key={`property-${index}`} item xs={12} sm={10} md={8}>
-              <Paper className={classes.realEstateListItem}>
-                <aside>
-                  <img
-                    src={
-                      "https://broker-platfrom-storage-bucket.s3.eu-central-1.amazonaws.com/2c156621419843728/bigPhotos/2c156621419843728_GB"
-                    }
-                    alt=""
-                  />
-                  <Link to={`property-page/${property.id}`}></Link>
-                </aside>
-                <main>
-                  <div className={"priceContainer"}>
-                    <Typography>
-                      #{`${property.id}`.padStart(5, "0")}
-                    </Typography>
-                    <Typography className="price">
-                      {property.real_estates_original_price}{" "}
-                      {property.real_estates_currency}
-                    </Typography>
-                  </div>
-                  <Typography className="type_size">
-                    {property.real_estates_construction_type},{" "}
-                    {property.real_estates_size} кв.м
+  const handlePageClick = e => {
+    if (e.selected !== page) {
+      setPage(e.selected);
+      setLoading(true);
+    }
+  };
+  return !loading ? (
+    <Container maxWidth="lg" className={classes.container}>
+      <Grid container justify="center" className={classes.realEstatesContainer}>
+        {realEstatesData.map((property, index) => (
+          <Grid key={`property-${index}`} item xs={12} sm={10} md={8}>
+            <Paper className={classes.realEstateListItem}>
+              <aside>
+                <img
+                  src={
+                    "https://broker-platfrom-storage-bucket.s3.eu-central-1.amazonaws.com/2c156621419843728/bigPhotos/2c156621419843728_GB"
+                  }
+                  alt=""
+                />
+                <Link to={`property-page/${property.id}`}></Link>
+              </aside>
+              <main>
+                <div className={"priceContainer"}>
+                  <Typography>#{`${property.id}`.padStart(5, "0")}</Typography>
+                  <Typography className="price">
+                    {property.real_estates_original_price}{" "}
+                    {property.real_estates_currency}
                   </Typography>
+                </div>
+                <Typography className="type_size">
+                  {property.real_estates_construction_type},{" "}
+                  {property.real_estates_size} кв.м
+                </Typography>
+                <Typography className="city_neighborhood">
+                  {property.real_estates_city},{" "}
+                  {property.real_estates_neighborhood}
+                </Typography>
+                <Hidden mdDown>
                   <Typography className="city_neighborhood">
-                    {property.real_estates_city},{" "}
-                    {property.real_estates_neighborhood}
+                    {property.real_estates_description}
                   </Typography>
-                  <Hidden mdDown>
-                    <Typography className="city_neighborhood">
-                      {property.real_estates_description}
-                    </Typography>
-                  </Hidden>
-                  <Link className="editButton" to="/edit/id">
-                    <Button variant="contained" color="primary">
-                      Редактирай
-                    </Button>
-                  </Link>
-                </main>
-              </Paper>
-            </Grid>
-          ))}
+                </Hidden>
+                <Link className="editButton" to="/edit/id">
+                  <Button variant="contained" color="primary">
+                    Редактирай
+                  </Button>
+                </Link>
+              </main>
+            </Paper>
+          </Grid>
+        ))}
+        <Grid item xs={12}>
+          <div className={classes.paginationContainer}>
+            <ReactPaginate
+              initialPage={page}
+              breakLabel={"..."}
+              breakClassName={"break-me"}
+              pageCount={total / LIMIT}
+              pageRangeDisplayed={5}
+              onPageChange={handlePageClick}
+              containerClassName={"pagination"}
+              subContainerClassName={"pages pagination"}
+              activeClassName={"active"}
+            />
+          </div>
         </Grid>
-      </Container>
-    )
+      </Grid>
+    </Container>
+  ) : (
+    <FullScreenLoader />
   );
 }
 
