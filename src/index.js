@@ -33,6 +33,13 @@ const theme = createMuiTheme({
   },
   fontColor: {
     importantText: orange[500]
+  },
+  overrides: {
+    MuiMenu: {
+      paper: {
+        maxHeight: "60%"
+      }
+    }
   }
 });
 

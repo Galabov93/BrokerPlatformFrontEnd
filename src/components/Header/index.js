@@ -1,14 +1,17 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   AppBar,
   Toolbar,
   Typography,
   Menu,
   MenuItem,
-  IconButton
+  IconButton,
+  Button
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import { Link, withRouter } from "react-router-dom";
+import PlusIcon from "@material-ui/icons/Add";
+import uuid from "uuid";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import { logout } from "../../services/Authentication/index";
 
@@ -46,8 +49,12 @@ function Header({ history }) {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-
+  const [uid, setUid] = useState(null);
   const isMenuOpen = Boolean(anchorEl);
+
+  useEffect(() => {
+    setUid(uuid());
+  }, []);
 
   function handleProfileMenuOpen(event) {
     setAnchorEl(event.currentTarget);
@@ -95,6 +102,17 @@ function Header({ history }) {
           <nav className={classes.navigation}>
             <Link className={classes.link} to={"/real-estates"}>
               Имоти
+            </Link>
+            <Link style={{ textDecoration: "none" }} to={`property/add/${uid}`}>
+              <Button
+                name="newRealEstate"
+                variant="contained"
+                color="primary"
+                className={classes.button}
+              >
+                Добави имот
+                <PlusIcon className={classes.rightIcon} />
+              </Button>
             </Link>
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
