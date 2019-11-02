@@ -292,6 +292,30 @@ function RealEstates(props) {
     fetchData().then(() => setLoading(false));
   }, [page]);
 
+  useEffect(() => {
+    if (!currentFilters) {
+      return;
+    }
+    const {
+      constructionType,
+      neighbourhoods,
+      priceFrom,
+      priceTo,
+      propertySellType,
+      sizeFrom,
+      sizeTo
+    } = currentFilters;
+    async function fetchData() {
+      scroll.scrollToTop();
+      const response = await axios.get(`/query-real-estates/`, {
+        params: currentFilters
+      });
+      // setRealEstatesData(response.data.data);
+      // setTotal(response.data.total);
+    }
+    fetchData();
+  }, [currentFilters]);
+
   const handlePageClick = e => {
     if (e.selected !== page) {
       setPage(e.selected);
