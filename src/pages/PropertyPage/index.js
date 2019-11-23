@@ -13,6 +13,7 @@ import {
 import "react-image-lightbox/style.css";
 import Carousel from "../../components/Carousel";
 import clsx from "clsx";
+import { S3_BASE_URL } from "../../utils/constants";
 
 const useStyles = makeStyles(theme => ({
   componentContainer: {
@@ -139,8 +140,6 @@ function PropertyPage({ match }) {
   const [realEstatesData, setRealEstatesData] = useState(null);
   const [images, setImages] = useState(null);
   const [loading, setLoading] = useState(true);
-  const url =
-    "https://broker-platfrom-storage-bucket.s3.eu-central-1.amazonaws.com/";
 
   useEffect(() => {
     async function fetchData() {
@@ -150,7 +149,7 @@ function PropertyPage({ match }) {
         .split(",")
         .map(
           element =>
-            `${url}${response.data.real_estates_id}/bigPhotos/${element}`
+            `${S3_BASE_URL}${response.data.real_estates_id}/bigPhotos/${element}`
         );
       setRealEstatesData(response.data);
       setImages(formatImages);
