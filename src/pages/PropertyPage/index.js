@@ -133,34 +133,33 @@ function MobileTitleBar({ realEstatesData, className }) {
   );
 }
 
-function PropertyPage() {
+function PropertyPage({ match }) {
   const classes = useStyles();
 
   const [realEstatesData, setRealEstatesData] = useState(null);
+  const [images, setImages] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const url =
+    "https://broker-platfrom-storage-bucket.s3.eu-central-1.amazonaws.com/";
 
   useEffect(() => {
     async function fetchData() {
-      const response = await axios.get("/real-estates/1");
+      setLoading(true);
+      const response = await axios.get(`/real-estates/${match.params.id}`);
+      const formatImages = response.data.real_estates_imageNames
+        .split(",")
+        .map(
+          element =>
+            `${url}${response.data.real_estates_id}/bigPhotos/${element}`
+        );
       setRealEstatesData(response.data);
+      setImages(formatImages);
     }
-    fetchData();
+    fetchData().then(() => setLoading(false));
   }, []);
 
-  const images = [
-    "https://broker-platfrom-storage-bucket.s3.eu-central-1.amazonaws.com/2c156621419843728/bigPhotos/2c156621419843728_GB",
-    "https://via.placeholder.com/250",
-    "https://via.placeholder.com/350",
-    "https://via.placeholder.com/450",
-    "https://via.placeholder.com/550",
-    "https://via.placeholder.com/150",
-    "https://via.placeholder.com/250",
-    "https://via.placeholder.com/350",
-    "https://via.placeholder.com/450",
-    "https://via.placeholder.com/550"
-  ];
-
   return (
-    realEstatesData !== null && (
+    !loading && (
       <Container className={classes.componentContainer} maxWidth="lg">
         <Grid container justify="center" spacing={4}>
           <DesktopTitleBar
