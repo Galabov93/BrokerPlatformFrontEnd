@@ -82,7 +82,7 @@ function Carousel({ images }) {
         className={classes.carousel}
         naturalSlideWidth={100}
         naturalSlideHeight={getNaturalHeight(width)}
-        totalSlides={10}
+        totalSlides={images.length}
         onMouseEnter={() => setCarouselArrowsShowing(true)}
         onMouseLeave={() => setCarouselArrowsShowing(false)}
       >
@@ -145,6 +145,6 @@ function getNaturalHeight(screenWidth) {
   } else if (screenWidth === "sm") {
     return 70;
   } else {
-    return 90;
+    return 100;
   }
 }
