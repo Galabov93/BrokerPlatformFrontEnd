@@ -14,9 +14,9 @@ import { animateScroll as scroll } from "react-scroll";
 import { FullScreenLoader } from "../../utils/Spinners/FullScreenSpinner";
 import Pagination from "../../components/Pagination";
 import { Link } from "react-router-dom";
-
 import { S3_BASE_URL } from "../../utils/constants";
 import { RealEstateFilters } from "../../components/RealEstatesFilter";
+import NoPhoto from "../../no-photo-image.jpg";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -102,7 +102,7 @@ const useStyles = makeStyles(theme => ({
 
 function RealEstates(props) {
   const classes = useStyles();
-  const LIMIT = 2;
+  const LIMIT = 20;
   const [realEstatesData, setRealEstatesData] = useState(null);
   const [total, setTotal] = useState(null);
   const [page, setPage] = useState(0);
@@ -151,6 +151,9 @@ function RealEstates(props) {
   };
 
   const getImage = property => {
+    if (!property.real_estates_imageNames) {
+      return `${NoPhoto}`;
+    }
     return `${S3_BASE_URL}${property.real_estates_id}/bigPhotos/${
       property.real_estates_imageNames.split(",")[0]
     }`;

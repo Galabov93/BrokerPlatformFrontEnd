@@ -14,6 +14,7 @@ import "react-image-lightbox/style.css";
 import Carousel from "../../components/Carousel";
 import clsx from "clsx";
 import { S3_BASE_URL } from "../../utils/constants";
+import NoImage from "../../no-photo-image.jpg";
 
 const useStyles = makeStyles(theme => ({
   componentContainer: {
@@ -139,6 +140,7 @@ function PropertyPage({ match }) {
 
   const [realEstatesData, setRealEstatesData] = useState(null);
   const [images, setImages] = useState(null);
+  console.log("TCL: PropertyPage -> images", images);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -146,11 +148,13 @@ function PropertyPage({ match }) {
       setLoading(true);
       const response = await axios.get(`/real-estates/${match.params.id}`);
       const formatImages = response.data.real_estates_imageNames
-        .split(",")
-        .map(
-          element =>
-            `${S3_BASE_URL}${response.data.real_estates_id}/bigPhotos/${element}`
-        );
+        ? response.data.real_estates_imageNames
+            .split(",")
+            .map(
+              element =>
+                `${S3_BASE_URL}${response.data.real_estates_id}/bigPhotos/${element}`
+            )
+        : [NoImage];
       setRealEstatesData(response.data);
       setImages(formatImages);
     }
