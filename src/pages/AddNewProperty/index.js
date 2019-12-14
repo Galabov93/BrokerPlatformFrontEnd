@@ -114,6 +114,7 @@ function AddImageComponent({ values, index, classes, onDrop }) {
 
   // eslint-disable-next-line no-eval
   if (eval(`values.images.image${index + 1}`)) {
+    // eslint-disable-next-line no-eval
     const image = eval(`values.images.image${index + 1}`);
     return (
       <div
@@ -573,6 +574,7 @@ const MyEnhancedForm = withFormik({
       real_estates_created_by: "Profile",
       real_estates_website_source: "custom"
     };
+    console.log("TCL: postObject", postObject);
     // axios.post()
   },
 

@@ -6,8 +6,7 @@ import {
   Grid,
   Typography,
   Paper,
-  Hidden,
-  MenuItem
+  Hidden
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import { animateScroll as scroll } from "react-scroll";
@@ -122,6 +121,7 @@ function RealEstates(props) {
     }
     setPropertiesLoading(false);
     fetchData().then(() => setLoading(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps,
   }, []);
 
   useEffect(() => {
