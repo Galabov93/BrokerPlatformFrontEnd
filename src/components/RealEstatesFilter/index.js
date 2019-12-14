@@ -81,7 +81,7 @@ const MyForm = props => {
           <FormTextField
             className={classes.textField}
             variant="filled"
-            label="Цена от"
+            label="Цена до"
             name="priceTo"
             values={values}
             handleChange={handleChange}
@@ -104,7 +104,7 @@ const MyForm = props => {
           <FormTextField
             className={classes.textField}
             variant="filled"
-            label="Квадратура от"
+            label="Квадратура до"
             name="sizeTo"
             values={values}
             handleChange={handleChange}
