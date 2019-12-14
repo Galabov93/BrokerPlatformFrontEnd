@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import axios from "../../config/API";
 import {
   Container,
-  Button,
   Grid,
   Typography,
   Paper,
-  Hidden
+  Hidden,
+  Slide
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import { animateScroll as scroll } from "react-scroll";
@@ -75,7 +75,9 @@ const useStyles = makeStyles(theme => ({
       },
       "& .priceContainer": {
         marginRight: theme.spacing(2),
-        // [theme.breakpoints.down("lg")]: {
+        [theme.breakpoints.down("sm")]: {
+          flexDirection: "column"
+        },
         display: "flex",
         justifyContent: "space-between",
         // },,
@@ -99,6 +101,14 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+function formatSellType(type) {
+  if (type === "rent") {
+    return "Дава под наем";
+  } else {
+    return "Продава";
+  }
+}
+
 function RealEstates(props) {
   const classes = useStyles();
   const LIMIT = 20;
@@ -112,7 +122,9 @@ function RealEstates(props) {
 
   useEffect(() => {
     async function fetchData() {
-      scroll.scrollToTop();
+      scroll.scrollToTop({
+        duration: 0
+      });
       const response = await axios.get(`/query-real-estates`, {
         params: Object.assign({ limit: LIMIT }, { offset: page * LIMIT })
       });
@@ -126,7 +138,9 @@ function RealEstates(props) {
 
   useEffect(() => {
     async function fetchData() {
-      scroll.scrollToTop();
+      scroll.scrollToTop({
+        duration: 0
+      });
       setPropertiesLoading(true);
       const response = await axios.get(
         `/query-real-estates/?$limit=${LIMIT}&$skip=${page * LIMIT}`,
@@ -168,43 +182,60 @@ function RealEstates(props) {
         </Grid>
         {!propertiesLoading ? (
           realEstatesData.map((property, index) => (
-            <Grid key={`property-${index}`} item xs={12} sm={10} md={8}>
-              <Paper className={classes.realEstateListItem}>
-                <aside>
-                  <img src={getImage(property)} alt="" />
-                  <Link to={`property-page/${property.id}`}></Link>
-                </aside>
-                <main>
-                  <div className={"priceContainer"}>
-                    <Typography>
-                      #{`${property.id}`.padStart(5, "0")}
+            <Slide
+              direction="up"
+              in={!propertiesLoading}
+              mountOnEnter
+              unmountOnExit
+            >
+              <Grid key={`property-${index}`} item xs={12} sm={10} md={8}>
+                <Paper className={classes.realEstateListItem}>
+                  <aside>
+                    <img src={getImage(property)} alt="" />
+                    <Link to={`property-page/${property.id}`}></Link>
+                  </aside>
+                  <main>
+                    <div className={"priceContainer"}>
+                      <Typography>
+                        <span
+                          style={{
+                            color: "#a00",
+                            textTransform: "uppercase",
+                            fontWeight: 700
+                          }}
+                        >
+                          {formatSellType(property.real_estates_sell_type)}{" "}
+                        </span>
+                      </Typography>
+                      <div>
+                        <Typography className="price">
+                          {property.real_estates_original_price}{" "}
+                          {property.real_estates_currency}
+                        </Typography>
+                      </div>
+                    </div>
+                    <Typography className="type_size">
+                      {property.real_estates_construction_type},{" "}
+                      {property.real_estates_size} кв.м
                     </Typography>
-                    <Typography className="price">
-                      {property.real_estates_original_price}{" "}
-                      {property.real_estates_currency}
-                    </Typography>
-                  </div>
-                  <Typography className="type_size">
-                    {property.real_estates_construction_type},{" "}
-                    {property.real_estates_size} кв.м
-                  </Typography>
-                  <Typography className="city_neighborhood">
-                    {property.real_estates_city},{" "}
-                    {property.real_estates_neighborhood}
-                  </Typography>
-                  <Hidden mdDown>
                     <Typography className="city_neighborhood">
-                      {property.real_estates_description}
+                      {property.real_estates_city},{" "}
+                      {property.real_estates_neighborhood}
                     </Typography>
-                  </Hidden>
-                  <Link className="editButton" to="/edit/id">
+                    <Hidden mdDown>
+                      <Typography className="city_neighborhood">
+                        {property.real_estates_description}
+                      </Typography>
+                    </Hidden>
+                    {/* <Link className="editButton" to="/edit/id">
                     <Button variant="contained" color="primary">
-                      Редактирай
+                    Редактирай
                     </Button>
-                  </Link>
-                </main>
-              </Paper>
-            </Grid>
+                  </Link> */}
+                  </main>
+                </Paper>
+              </Grid>
+            </Slide>
           ))
         ) : (
           <FullScreenLoader />
