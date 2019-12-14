@@ -1,10 +1,8 @@
 import ProtectedRoute from "../../utils/ProtectedRoute/index";
-// import Header from "../../components/Header/header";
 import RealEstates from "../../pages/RealEstates";
 import PropertyPage from "../../pages/PropertyPage";
 import AddNewProperty from "../../pages/AddNewProperty";
-
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
@@ -19,6 +17,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import MailIcon from "@material-ui/icons/Mail";
+import { logout } from "../../services/Authentication";
 
 const drawerWidth = 240;
 
@@ -49,8 +48,13 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function UserRoutes() {
+function UserRoutes({ history }) {
   const classes = useStyles();
+
+  function handleLogout() {
+    logout();
+    history.push("/login");
+  }
 
   return (
     <div className={classes.root}>
@@ -58,7 +62,7 @@ export default function UserRoutes() {
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
           <Typography variant="h6" noWrap>
-            Refer+
+            REFER+
           </Typography>
         </Toolbar>
       </AppBar>
@@ -90,7 +94,7 @@ export default function UserRoutes() {
         <Divider />
         <List>
           {["Изход"].map((text, index) => (
-            <ListItem button key={text}>
+            <ListItem button onClick={handleLogout} key={text}>
               <ListItemIcon>
                 {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
               </ListItemIcon>
@@ -131,6 +135,8 @@ export default function UserRoutes() {
     </div>
   );
 }
+
+export default withRouter(UserRoutes);
 
 // export default function UserRoutes() {
 //   return (
