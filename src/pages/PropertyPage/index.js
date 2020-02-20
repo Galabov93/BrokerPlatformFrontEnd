@@ -212,7 +212,7 @@ function PropertyPage({ match }) {
               />
               <InfoLine
                 attributeText="Вид строителство"
-                boldText={`TO BE DONE`}
+                boldText={`${realEstatesData.real_estate_construction_material}`}
               />
               <InfoLine
                 attributeText="Етаж"
