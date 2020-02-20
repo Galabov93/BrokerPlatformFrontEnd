@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { withRouter } from "react-router-dom";
 import axios from "../../config/API";
 import {
   Container,
@@ -16,6 +17,7 @@ import { Link } from "react-router-dom";
 import { S3_BASE_URL } from "../../utils/constants";
 import { RealEstateFilters } from "../../components/RealEstatesFilter";
 import NoPhoto from "../../no-photo-image.jpg";
+import queryString from "query-string";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -115,18 +117,23 @@ function RealEstates(props) {
   const [realEstatesData, setRealEstatesData] = useState(null);
   const [total, setTotal] = useState(null);
   const [page, setPage] = useState(0);
-
+  console.log("TCL: RealEstates -> page", page);
+  console.log(props.match.params.page - 1);
   const [propertiesLoading, setPropertiesLoading] = useState(true);
   const [loading, setLoading] = useState(true);
   const [currentFilters, setCurrentFilters] = useState(null);
 
   useEffect(() => {
+    console.log(props);
     async function fetchData() {
       scroll.scrollToTop({
         duration: 0
       });
       const response = await axios.get(`/query-real-estates`, {
-        params: Object.assign({ limit: LIMIT }, { offset: page * LIMIT })
+        params: Object.assign(
+          { limit: LIMIT },
+          { offset: props.match.params.page * LIMIT }
+        )
       });
       setRealEstatesData(response.data.rows);
       setTotal(response.data.count);
@@ -143,11 +150,12 @@ function RealEstates(props) {
       });
       setPropertiesLoading(true);
       const response = await axios.get(
-        `/query-real-estates/?$limit=${LIMIT}&$skip=${page * LIMIT}`,
+        `/query-real-estates/?$limit=${LIMIT}&$skip=${props.match.params.page *
+          LIMIT}`,
         {
           params: Object.assign(
             { limit: LIMIT },
-            { offset: page * LIMIT },
+            { offset: props.match.params.page * LIMIT },
             currentFilters
           )
         }
@@ -156,11 +164,12 @@ function RealEstates(props) {
       setTotal(response.data.count);
     }
     fetchData().then(() => setPropertiesLoading(false));
-  }, [page, currentFilters]);
+  }, [props.match.params.page, currentFilters]);
 
   const handlePageClick = e => {
-    if (e.selected !== page) {
-      setPage(e.selected);
+    if (e.selected !== props.match.params.page - 1) {
+      // setPage(e.selected);
+      props.history.replace(`${e.selected + 1}`);
     }
   };
 
@@ -182,17 +191,17 @@ function RealEstates(props) {
         </Grid>
         {!propertiesLoading ? (
           realEstatesData.map((property, index) => (
-            <Slide
-              direction="up"
-              in={!propertiesLoading}
-              mountOnEnter
-              unmountOnExit
-            >
-              <Grid key={`property-${index}`} item xs={12} sm={10} md={8}>
+            <Grid key={`property-${index}`} item xs={12} sm={10} md={8}>
+              <Slide
+                direction="up"
+                in={!propertiesLoading}
+                mountOnEnter
+                unmountOnExit
+              >
                 <Paper className={classes.realEstateListItem}>
                   <aside>
                     <img src={getImage(property)} alt="" />
-                    <Link to={`property-page/${property.id}`}></Link>
+                    <Link to={`/property-page/${property.id}`}></Link>
                   </aside>
                   <main>
                     <div className={"priceContainer"}>
@@ -234,8 +243,8 @@ function RealEstates(props) {
                   </Link> */}
                   </main>
                 </Paper>
-              </Grid>
-            </Slide>
+              </Slide>
+            </Grid>
           ))
         ) : (
           <FullScreenLoader />
@@ -244,7 +253,7 @@ function RealEstates(props) {
           <Pagination
             total={total}
             handlePageClick={handlePageClick}
-            page={page}
+            page={props.match.params.page - 1}
             LIMIT={LIMIT}
           />
         </Grid>
@@ -257,4 +266,4 @@ function RealEstates(props) {
 
 RealEstates.propTypes = {};
 
-export default RealEstates;
+export default withRouter(RealEstates);

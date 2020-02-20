@@ -15,6 +15,7 @@ import Carousel from "../../components/Carousel";
 import clsx from "clsx";
 import { S3_BASE_URL } from "../../utils/constants";
 import NoImage from "../../no-photo-image.jpg";
+import "./style.css";
 
 const useStyles = makeStyles(theme => ({
   componentContainer: {
@@ -183,6 +184,10 @@ function PropertyPage({ match }) {
           <Grid item xs={12} md={4}>
             <Paper className={classes.paperContainer}>
               <HeadingText text={"Основна информация"} />
+              <InfoLine
+                attributeText="Идентификатор"
+                boldText={`${realEstatesData.id}`.padStart(5, "0")}
+              />
 
               <Hidden mdUp>
                 <div className={classes.mobilePhoneNumber}>

@@ -30,6 +30,7 @@ const useStyles = makeStyles(theme => ({
       display: "flex",
       justifyContent: "center",
       flexWrap: "wrap",
+      zIndex: 100,
       "& button": {
         border: "none",
         color: "white",
@@ -50,22 +51,23 @@ const useStyles = makeStyles(theme => ({
       display: "none"
     },
     position: "absolute",
-    top: "calc(50% - 35px)",
+    top: 0,
     border: "none",
     background: "none",
     outline: 0,
-    width: 80,
-    height: 80,
+    width: "30%",
+    height: "100%",
     "& svg": {
       width: "100%",
-      height: "100%"
+      height: "100%",
+      fill: "darkgray"
     }
   },
   arrowBack: {
-    left: 30
+    left: 0
   },
   arrowNext: {
-    right: 30
+    right: 0
   }
 }));
 
@@ -116,6 +118,8 @@ function Carousel({ images }) {
       {isLightboxOpen && ["md", "lg", "xl"].includes(width) && (
         <>
           <Lightbox
+            style={{ zIndex: 2000 }}
+            className="hey"
             mainSrc={images[photoIndex]}
             nextSrc={images[(photoIndex + 1) % images.length]}
             prevSrc={images[(photoIndex + images.length - 1) % images.length]}

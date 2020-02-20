@@ -82,7 +82,7 @@ function UserRoutes({ history, container }) {
       <Divider />
       <List>
         {[
-          { text: "Имоти", route: "/real-estates" },
+          { text: "Имоти", route: "/real-estates/1" },
           { text: "Добави имот", route: "/property/add/100" }
         ].map((item, index) => (
           <Link key={item.text} className={classes.link} to={item.route}>
@@ -163,7 +163,7 @@ function UserRoutes({ history, container }) {
         <ProtectedRoute exact path="/" component={() => <div>Dashboard</div>} />
         <ProtectedRoute
           exact
-          path="/real-estates"
+          path="/real-estates/:page"
           component={() => <RealEstates />}
         />
         <ProtectedRoute
