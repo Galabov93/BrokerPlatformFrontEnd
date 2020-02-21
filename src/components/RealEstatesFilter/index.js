@@ -55,7 +55,7 @@ const MyForm = props => {
 
   const offerTypes = [
     { label: "За Наем", value: "rent" },
-    { label: "За Продаване", value: "sell" }
+    { label: "За Продаване", value: "sale" }
   ];
 
   return (

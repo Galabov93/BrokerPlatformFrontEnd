@@ -28,7 +28,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "s3-deploy": "aws2 s3 sync ./build s3: //referplus-broker-platform",
+    "s3-deploy": "aws2 s3 sync ./build s3://referplus-broker-platform",
     "deploy": "npm run build && npm run s3-deploy"
   },
   "eslintConfig": {
