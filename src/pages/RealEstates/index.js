@@ -17,7 +17,6 @@ import { Link } from "react-router-dom";
 import { S3_BASE_URL } from "../../utils/constants";
 import { RealEstateFilters } from "../../components/RealEstatesFilter";
 import NoPhoto from "../../no-photo-image.jpg";
-import queryString from "query-string";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -116,9 +115,6 @@ function RealEstates(props) {
   const LIMIT = 20;
   const [realEstatesData, setRealEstatesData] = useState(null);
   const [total, setTotal] = useState(null);
-  const [page, setPage] = useState(0);
-  console.log("TCL: RealEstates -> page", page);
-  console.log(props.match.params.page - 1);
   const [propertiesLoading, setPropertiesLoading] = useState(true);
   const [loading, setLoading] = useState(true);
   const [currentFilters, setCurrentFilters] = useState(null);

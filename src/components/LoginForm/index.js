@@ -6,7 +6,7 @@ import { login, register } from "../../services/Authentication/index";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import Grid from "@material-ui/core/Grid";
+// import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
@@ -140,7 +140,7 @@ const LoginForm = ({ type, history, ...rest }) => {
               >
                 {!isSubmitting ? type : <div>Loading</div>}
               </Button>
-              <Grid container>
+              {/* <Grid container>
                 <Grid item xs>
                   <Link href="#" variant="body2">
                     Forgot password?
@@ -156,8 +156,8 @@ const LoginForm = ({ type, history, ...rest }) => {
                       Already have an account? Sign-in
                     </Link>
                   )}
-                </Grid>
-              </Grid>
+                </Grid> */}
+              {/* </Grid> */}
             </form>
           </div>
           <Box mt={8}>
