@@ -7,7 +7,7 @@ import {
 import FormMultipleSelect from "../../components/FormComponents/FormMultipleSelect";
 import { FormTextField } from "../../components/FormComponents/FormTextField";
 import { makeStyles } from "@material-ui/styles";
-import { Formik, withFormik } from "formik";
+import { Formik } from "formik";
 import { Button } from "@material-ui/core";
 
 const filterStyles = makeStyles((theme) => ({

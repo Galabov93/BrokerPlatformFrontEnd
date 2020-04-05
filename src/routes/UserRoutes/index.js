@@ -1,5 +1,4 @@
 import ProtectedRoute from "../../utils/ProtectedRoute/index";
-import RealEstates from "../../pages/RealEstates";
 import PropertyPage from "../../pages/PropertyPage";
 import AddNewProperty from "../../pages/AddNewProperty";
 import { Link, withRouter } from "react-router-dom";

@@ -1,21 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router-dom";
 import axios from "../../config/API";
-import {
-  Container,
-  Grid,
-  Typography,
-  Paper,
-  Hidden,
-  Slide,
-} from "@material-ui/core";
+import { Grid, Typography, Paper, Hidden, Slide } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import { animateScroll as scroll } from "react-scroll";
+
 import { FullScreenLoader } from "../../utils/Spinners/FullScreenSpinner";
 import Pagination from "../../components/Pagination";
 import { Link } from "react-router-dom";
 import { S3_BASE_URL } from "../../utils/constants";
-import { RealEstateFilters } from "../../components/RealEstatesFilter";
 import NoPhoto from "../../no-photo-image.jpg";
 
 const useStyles = makeStyles((theme) => ({
@@ -110,21 +103,9 @@ function formatSellType(type) {
   }
 }
 
-// function MyComponent(props) {
-//   return
-// }
-// function areEqual(prevProps, nextProps) {
-//   /*
-//   return true if passing nextProps to render would return
-//   the same result as passing prevProps to render,
-//   otherwise return false
-//   */
-// }
-// export default React.memo(MyComponent, areEqual);
-
 function RealEstates(props) {
   const classes = useStyles();
-  const LIMIT = 2;
+  const LIMIT = 20;
   const [realEstatesData, setRealEstatesData] = useState(null);
   const [total, setTotal] = useState(null);
   const [propertiesLoading, setPropertiesLoading] = useState(true);
