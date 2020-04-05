@@ -14,14 +14,14 @@ import {
   FormLabel,
   Grid,
   Tooltip,
-  Fab
+  Fab,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import {
   neighborhoods,
   realEstateTypes,
   cities,
-  features
+  features,
 } from "../../utils/FormHelpers/form-data";
 import AddIcon from "@material-ui/icons/Add";
 import { FormSelectMenu } from "../../components/FormComponents/FormSelectMenu";
@@ -39,21 +39,21 @@ const PropertyFormSchema = Yup.object().shape({
   //     .required("Required")
 });
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   mainContainer: {
     [theme.breakpoints.down("md")]: {
       paddingLeft: theme.spacing(4),
-      paddingRight: theme.spacing(4)
-    }
+      paddingRight: theme.spacing(4),
+    },
   },
   formRoot: {
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
   },
 
   title: {
     margin: theme.spacing(3),
-    textTransform: "uppercase"
+    textTransform: "uppercase",
   },
   sectionContainer: {
     marginTop: theme.spacing(2),
@@ -62,8 +62,8 @@ const useStyles = makeStyles(theme => ({
     flexDirection: "column",
     [theme.breakpoints.up("sm")]: {
       flexDirection: "row",
-      justifyContent: "space-between"
-    }
+      justifyContent: "space-between",
+    },
   },
   featuresContainer: {
     marginTop: theme.spacing(2),
@@ -71,21 +71,21 @@ const useStyles = makeStyles(theme => ({
     "& .checkboxGrid": {
       marginTop: theme.spacing(1),
       display: "grid",
-      gridTemplateColumns: "1fr 1fr"
-    }
+      gridTemplateColumns: "1fr 1fr",
+    },
   },
   selectContainer: {
-    minWidth: 200
+    minWidth: 200,
   },
   textField: {
-    maxWidth: 200
+    maxWidth: 200,
   },
   description: {
-    flexBasis: "100%"
+    flexBasis: "100%",
   },
   submitButton: {
-    marginTop: theme.spacing(4)
-  }
+    marginTop: theme.spacing(4),
+  },
 }));
 
 function AddImageComponent({ values, index, classes, onDrop }) {
@@ -102,7 +102,7 @@ function AddImageComponent({ values, index, classes, onDrop }) {
         name: file.name,
         type: file.type,
         size: Math.round(file.size / 1000) + " kB",
-        base64: reader.result
+        base64: reader.result,
       };
       onDrop(fileInfo, index);
     };
@@ -130,7 +130,7 @@ function AddImageComponent({ values, index, classes, onDrop }) {
       <div className={classes.noImage} cols={1} onClick={handleClick}>
         <input
           ref={inputRef}
-          onChange={e => handleChange(e, index)}
+          onChange={(e) => handleChange(e, index)}
           type="file"
         ></input>
         <Tooltip title="Add" aria-label="add">
@@ -143,19 +143,19 @@ function AddImageComponent({ values, index, classes, onDrop }) {
   }
 }
 
-const useImageStyles = makeStyles(theme => ({
+const useImageStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     flexWrap: "wrap",
     justifyContent: "space-around",
     overflow: "hidden",
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(2),
   },
   imageContainer: {
     "& img": {
       width: "100%",
-      objectFit: "contain"
-    }
+      objectFit: "contain",
+    },
   },
   noImage: {
     display: "flex",
@@ -164,9 +164,9 @@ const useImageStyles = makeStyles(theme => ({
       display: "none",
       zIndex: 100,
       width: "100%",
-      height: "100%"
-    }
-  }
+      height: "100%",
+    },
+  },
 }));
 
 export function ImageGridList({ key, values, onDrop, imagesLength }) {
@@ -216,7 +216,7 @@ const Form = ({
   setFieldTouched,
   handleChange,
   handleSubmit,
-  errors
+  errors,
 }) => {
   const classes = useStyles();
   const onDrop = (picture, index) => {
@@ -332,7 +332,7 @@ const Form = ({
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">€</InputAdornment>
-              )
+              ),
             }}
           />
 
@@ -348,7 +348,7 @@ const Form = ({
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">Кв.м</InputAdornment>
-              )
+              ),
             }}
           />
         </section>
@@ -436,7 +436,7 @@ const Form = ({
                       }}
                       value={element}
                       inputProps={{
-                        "aria-label": "primary checkbox"
+                        "aria-label": "primary checkbox",
                       }}
                     />
                   }
@@ -486,7 +486,7 @@ const MyEnhancedForm = withFormik({
     tec: "",
     phoneNumber: "",
     checkboxes: {},
-    images: {}
+    images: {},
   }),
 
   // Custom sync validation
@@ -512,7 +512,7 @@ const MyEnhancedForm = withFormik({
     };
 
     const formatFloorString = (floor, floors) => {
-      const getBulgarianNumeral = floor => {
+      const getBulgarianNumeral = (floor) => {
         switch (floor) {
           case 1:
             return "-ви";
@@ -528,13 +528,13 @@ const MyEnhancedForm = withFormik({
       return `floor${numeral} от ${floors}`;
     };
 
-    const getImageNames = values => {
+    const getImageNames = (values) => {
       return "names";
     };
 
-    const formatFeaturesForDatabase = checkboxes => {
+    const formatFeaturesForDatabase = (checkboxes) => {
       return Object.values(checkboxes)
-        .filter(value => features.includes(value))
+        .filter((value) => features.includes(value))
         .join(",");
     };
 
@@ -572,13 +572,12 @@ const MyEnhancedForm = withFormik({
         values.checkboxes
       ),
       real_estates_created_by: "Profile",
-      real_estates_website_source: "custom"
+      real_estates_website_source: "custom",
     };
-    console.log("TCL: postObject", postObject);
     // axios.post()
   },
 
-  displayName: "BasicForm"
+  displayName: "BasicForm",
 })(Form);
 
 export default MyEnhancedForm;
