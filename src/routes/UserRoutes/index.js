@@ -22,50 +22,60 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import { logout } from "../../services/Authentication";
 import { useTheme } from "@material-ui/styles";
+import RealEstatesPage from "../../pages/RealEstatesProvider";
 
 const drawerWidth = 240;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    display: "flex"
+    display: "flex",
   },
   drawer: {
     [theme.breakpoints.up("sm")]: {
       width: drawerWidth,
-      flexShrink: 0
-    }
+      flexShrink: 0,
+    },
   },
   appBar: {
     [theme.breakpoints.up("sm")]: {
       width: `calc(100% - ${drawerWidth}px)`,
-      marginLeft: drawerWidth
-    }
+      marginLeft: drawerWidth,
+    },
   },
   menuButton: {
     marginRight: theme.spacing(2),
     [theme.breakpoints.up("sm")]: {
-      display: "none"
-    }
+      display: "none",
+    },
   },
   toolbar: theme.mixins.toolbar,
   link: {
     textDecoration: "none",
-    color: "inherit"
+    color: "inherit",
   },
   drawerPaper: {
-    width: drawerWidth
+    width: drawerWidth,
   },
   content: {
     flexGrow: 1,
-    width: "100%"
+    width: "100%",
     // padding: theme.spacing(3)
-  }
+  },
 }));
 
 function UserRoutes({ history, container }) {
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [currentFilters, setCurrentFilters] = React.useState({
+    propertySellType: "",
+    constructionType: [],
+    neighbourhoods: [],
+    priceFrom: "",
+    priceTo: "",
+    sizeFrom: "",
+    sizeTo: "",
+  });
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -83,7 +93,7 @@ function UserRoutes({ history, container }) {
       <List>
         {[
           { text: "Имоти", route: "/real-estates/1" },
-          { text: "Добави имот", route: "/property/add/100" }
+          { text: "Добави имот", route: "/property/add/100" },
         ].map((item, index) => (
           <Link key={item.text} className={classes.link} to={item.route}>
             <ListItem button>
@@ -137,10 +147,10 @@ function UserRoutes({ history, container }) {
             open={mobileOpen}
             onClose={handleDrawerToggle}
             classes={{
-              paper: classes.drawerPaper
+              paper: classes.drawerPaper,
             }}
             ModalProps={{
-              keepMounted: true // Better open performance on mobile.
+              keepMounted: true, // Better open performance on mobile.
             }}
           >
             {drawer}
@@ -149,7 +159,7 @@ function UserRoutes({ history, container }) {
         <Hidden xsDown implementation="css">
           <Drawer
             classes={{
-              paper: classes.drawerPaper
+              paper: classes.drawerPaper,
             }}
             variant="permanent"
             open
@@ -164,7 +174,12 @@ function UserRoutes({ history, container }) {
         <ProtectedRoute
           exact
           path="/real-estates/:page"
-          component={() => <RealEstates />}
+          component={() => (
+            <RealEstatesPage
+              currentFilters={currentFilters}
+              setCurrentFilters={setCurrentFilters}
+            />
+          )}
         />
         <ProtectedRoute
           exact
