@@ -123,7 +123,7 @@ function RealEstates(props) {
         {
           params: Object.assign(
             { limit: LIMIT },
-            { offset: props.match.params.page * LIMIT },
+            { offset: (props.match.params.page - 1) * LIMIT },
             props.currentFilters
           ),
         }

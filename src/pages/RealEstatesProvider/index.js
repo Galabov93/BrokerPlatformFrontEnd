@@ -1,7 +1,7 @@
 import React from "react";
 import RealEstates from "../RealEstates";
 import { Container, Grid, makeStyles } from "@material-ui/core";
-import { RealEstateFilters } from "../../components/RealEstatesFilter";
+import RealEstateFilters from "../../components/RealEstatesFilter";
 
 const useStyles = makeStyles((theme) => ({
   container: {

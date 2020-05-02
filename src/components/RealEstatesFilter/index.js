@@ -9,6 +9,7 @@ import { FormTextField } from "../../components/FormComponents/FormTextField";
 import { makeStyles } from "@material-ui/styles";
 import { Formik } from "formik";
 import { Button } from "@material-ui/core";
+import { withRouter } from "react-router-dom";
 
 const filterStyles = makeStyles((theme) => ({
   formContainer: {
@@ -35,7 +36,7 @@ const filterStyles = makeStyles((theme) => ({
   },
 }));
 
-export const RealEstateFilters = ({ currentFilters, setCurrentFilters }) => {
+const RealEstateFilters = ({ currentFilters, setCurrentFilters, history }) => {
   const classes = filterStyles();
 
   function formatCollectionForReactSelect(array) {
@@ -55,6 +56,7 @@ export const RealEstateFilters = ({ currentFilters, setCurrentFilters }) => {
     <Formik
       initialValues={currentFilters}
       onSubmit={(values) => {
+        history.push("/real-estates/1");
         setCurrentFilters(values);
       }}
     >
@@ -164,3 +166,5 @@ export const RealEstateFilters = ({ currentFilters, setCurrentFilters }) => {
     </Formik>
   );
 };
+
+export default withRouter(RealEstateFilters);
