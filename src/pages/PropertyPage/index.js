@@ -8,7 +8,7 @@ import {
   Paper,
   Grid,
   Hidden,
-  Link
+  Link,
 } from "@material-ui/core";
 import "react-image-lightbox/style.css";
 import Carousel from "../../components/Carousel";
@@ -17,15 +17,15 @@ import { S3_BASE_URL } from "../../utils/constants";
 import NoImage from "../../no-photo-image.jpg";
 import "./style.css";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   componentContainer: {
-    marginTop: theme.spacing(3)
+    marginTop: theme.spacing(3),
   },
   paperContainer: {
-    padding: theme.spacing(1)
+    padding: theme.spacing(1),
   },
   heading: {
-    padding: theme.spacing(1)
+    padding: theme.spacing(1),
   },
   mobilePhoneNumber: {
     display: "flex",
@@ -33,15 +33,15 @@ const useStyles = makeStyles(theme => ({
     "& a": {
       padding: 8,
       marginTop: 4,
-      fontSize: 18
-    }
+      fontSize: 18,
+    },
   },
   infoText: {
     fontSize: 18,
     padding: theme.spacing(1),
     "& span": {
-      fontWeight: 500
-    }
+      fontWeight: 500,
+    },
   },
   titleAndPrice: {
     display: "flex",
@@ -53,16 +53,16 @@ const useStyles = makeStyles(theme => ({
         fontSize: 20,
         marginTop: theme.spacing(2),
         flexDirection: "row !important",
-        alignItems: "center"
-      }
+        alignItems: "center",
+      },
     },
     "& h6": {
       [theme.breakpoints.down("sm")]: {
-        flexBasis: "70%"
+        flexBasis: "70%",
       },
       [theme.breakpoints.up("sm")]: {
-        flexBasis: "50%"
-      }
+        flexBasis: "50%",
+      },
     },
     "& .priceParagraph": {
       fontSize: 20,
@@ -71,24 +71,34 @@ const useStyles = makeStyles(theme => ({
       alignItems: "flex-end",
       "& > p": {
         color: theme.fontColor.importantText,
-        fontSize: "inherit"
-      }
-    }
+        fontSize: "inherit",
+      },
+    },
   },
   featuresContainer: {
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(2),
   },
   description: {
     padding: theme.spacing(1),
     maxWidth: "95%",
-    textAlign: "justify"
+    textAlign: "justify",
   },
   featuresList: {
     "& li": {
-      padding: theme.spacing(1) / 2
-    }
-  }
+      padding: theme.spacing(1) / 2,
+    },
+  },
 }));
+
+function formatDate(dateString) {
+  const dateTimeFormat = new Intl.DateTimeFormat("en", {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+  });
+
+  return dateTimeFormat.format(new Date(dateString));
+}
 
 // Title and Price information
 function DesktopTitleBar({ realEstatesData, className }) {
@@ -152,7 +162,7 @@ function PropertyPage({ match }) {
         ? response.data.real_estates_imageNames
             .split(",")
             .map(
-              element =>
+              (element) =>
                 `${S3_BASE_URL}${response.data.real_estates_id}/bigPhotos/${element}`
             )
         : [NoImage];
@@ -188,7 +198,14 @@ function PropertyPage({ match }) {
                 attributeText="Идентификатор"
                 boldText={`${realEstatesData.id}`.padStart(5, "0")}
               />
-
+              <InfoLine
+                attributeText="Имот.бг ид"
+                boldText={`${realEstatesData.real_estates_id}`}
+              />
+              <InfoLine
+                attributeText="Дата на качване"
+                boldText={`${formatDate(realEstatesData.createdAt)}`}
+              />
               <Hidden mdUp>
                 <div className={classes.mobilePhoneNumber}>
                   <InfoLine attributeText="Телефон" />
