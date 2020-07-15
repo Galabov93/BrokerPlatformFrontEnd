@@ -16,6 +16,7 @@ import clsx from "clsx";
 import { S3_BASE_URL } from "../../utils/constants";
 import NoImage from "../../no-photo-image.jpg";
 import "./style.css";
+import Notes from "./NotesComponent";
 
 const useStyles = makeStyles((theme) => ({
   componentContainer: {
@@ -128,7 +129,6 @@ function DesktopTitleBar({ realEstatesData, className }) {
 
 // Title and Price information
 function MobileTitleBar({ realEstatesData, className }) {
-  console.log("TCL: MobileTitleBar -> realEstatesData", realEstatesData);
   return (
     <Hidden mdUp>
       <Grid item xs={12} className={className}>
@@ -151,7 +151,6 @@ function PropertyPage({ match }) {
 
   const [realEstatesData, setRealEstatesData] = useState(null);
   const [images, setImages] = useState(null);
-  console.log("TCL: PropertyPage -> images", images);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -289,16 +288,24 @@ function PropertyPage({ match }) {
               </Paper>
             </Grid>
           </Hidden>
+
+          <Grid item xs={12} md={10} lg={10}>
+            <Paper className={classes.paperContainer}>
+              <HeadingText align="center" paragraph text={"Бележки"} />
+
+              <Notes realEstateId={realEstatesData.id} />
+            </Paper>
+          </Grid>
         </Grid>
       </Container>
     )
   );
 }
 
-function HeadingText({ text }) {
+export function HeadingText({ text, ...rest }) {
   const classes = useStyles();
   return (
-    <Typography variant="h5" className={classes.heading}>
+    <Typography variant="h5" {...rest} className={classes.heading}>
       {text}
     </Typography>
   );

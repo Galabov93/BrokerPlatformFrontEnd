@@ -16,12 +16,15 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import MailIcon from "@material-ui/icons/Mail";
+import NotesIcon from "@material-ui/icons/Book";
+
 import Hidden from "@material-ui/core/Hidden";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import { logout } from "../../services/Authentication";
 import { useTheme } from "@material-ui/styles";
 import RealEstatesPage from "../../pages/RealEstatesProvider";
+import NotesPage from "../../pages/Notes";
 
 const drawerWidth = 240;
 
@@ -91,14 +94,17 @@ function UserRoutes({ history, container }) {
       <Divider />
       <List>
         {[
-          { text: "Имоти", route: "/real-estates/1" },
-          { text: "Добави имот", route: "/property/add/100" },
+          { text: "Имоти", route: "/real-estates/1", icon: <InboxIcon /> },
+          {
+            text: "Добави имот",
+            route: "/property/add/100",
+            icon: <MailIcon />,
+          },
+          { text: "Бележки", route: "/notes", icon: <NotesIcon /> },
         ].map((item, index) => (
           <Link key={item.text} className={classes.link} to={item.route}>
             <ListItem button>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
+              <ListItemIcon>{item.icon}</ListItemIcon>
               <ListItemText primary={item.text} />
             </ListItem>
           </Link>
@@ -185,6 +191,7 @@ function UserRoutes({ history, container }) {
           path="/property-page/:id"
           component={() => <PropertyPage />}
         />
+        <ProtectedRoute exact path="/notes" component={() => <NotesPage />} />
         <ProtectedRoute
           exact
           path="/profile"
