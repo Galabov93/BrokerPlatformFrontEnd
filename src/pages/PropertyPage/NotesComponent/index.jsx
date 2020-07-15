@@ -22,17 +22,12 @@ export default function Notes({ realEstateId }) {
   const [notes, setNotes] = useState([]);
 
   useEffect(() => {
-    const token = window.localStorage.getItem("userToken");
     async function fetchData() {
       const response = await axios.get(
-        `/notes?realEstateId=${realEstateId}&$limit=100`,
-        {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        }
+        `/notes?realEstateId=${realEstateId}&$limit=100`
       );
       console.log("fetchData -> response", response);
+      if (!response.data) return;
       setNotes(response.data.data);
     }
     fetchData();

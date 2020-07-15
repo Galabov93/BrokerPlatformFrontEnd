@@ -13,13 +13,16 @@ export default function NotesPage() {
   useEffect(() => {
     const token = window.localStorage.getItem("userToken");
     async function fetchData() {
-      const response = await API.get(`/notes?$limit=100`, {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      });
-      console.log("fetchData -> response", response);
-      setNotes(response.data.data);
+      try {
+        const response = await API.get(`/notes?$limit=100`, {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        });
+        setNotes(response.data.data);
+      } catch (e) {
+        console.log("eror", e);
+      }
     }
     fetchData();
   }, []);

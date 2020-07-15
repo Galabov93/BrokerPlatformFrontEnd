@@ -128,6 +128,7 @@ function RealEstates(props) {
           ),
         }
       );
+      if (!response.data) return;
       setRealEstatesData(response.data.rows);
       setTotal(response.data.count);
     }
@@ -148,6 +149,7 @@ function RealEstates(props) {
       property.real_estates_imageNames.split(",")[0]
     }`;
   };
+  console.log("propertiesLoading", propertiesLoading);
   return (
     <>
       {!propertiesLoading ? (
